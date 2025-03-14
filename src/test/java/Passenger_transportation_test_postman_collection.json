@@ -1,0 +1,553 @@
+{
+	"info": {
+		"_postman_id": "677f6e68-cb3b-41ed-ac3c-9e5e13de9d2a",
+		"name": "Passenger_transportation Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21878054"
+	},
+	"item": [
+		{
+			"name": "add_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required Content-Type header set to application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is a boolean value\", function () {",
+							"    pm.expect(pm.response.text()).to.be.oneOf(['true', 'false']);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Name and phone are present in the request and have valid values\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.true;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Tg_name is present and has a non-empty string value\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.a('string');",
+							"    pm.expect(responseData).to.exist.and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/add_user?name=Name&phone=+79859638564&tg_name=user_tg_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"add_user"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Name"
+						},
+						{
+							"key": "phone",
+							"value": "+79859638564"
+						},
+						{
+							"key": "tg_name",
+							"value": "user_tg_name"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the correct Content-Type header\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is a boolean value\", function () {",
+							"    pm.expect(pm.response.text()).to.be.oneOf(['true', 'false']);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response contains true value\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"true\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/update_user?param=name&update_info=newName&tg_name=user_tg_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"update_user"
+					],
+					"query": [
+						{
+							"key": "param",
+							"value": "name"
+						},
+						{
+							"key": "update_info",
+							"value": "newName"
+						},
+						{
+							"key": "tg_name",
+							"value": "user_tg_name"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "travel_filter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response Content-Type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"IdTrip, datetime, limit, and datetimeend are present in the response\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(item){",
+							"        pm.expect(item.idTrip).to.exist;",
+							"        pm.expect(item.datetime).to.exist;",
+							"        pm.expect(item.limit).to.exist;",
+							"        pm.expect(item.datetimeend).to.exist;",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"BookingCollection array is present and contains at least one element\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    pm.expect(responseData).to.have.property('bookingCollection').that.is.an('array').and.to.have.lengthOf.at.least(1);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate idBooking in bookingCollection is a non-zero positive integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(trip => {",
+							"        pm.expect(trip.bookingCollection).to.be.an('array');",
+							"        trip.bookingCollection.forEach(booking => {",
+							"            pm.expect(booking.idBooking).to.be.a('number');",
+							"            pm.expect(booking.idBooking).to.be.above(0);",
+							"        });",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/travel_filter?datetime=2025-01-01T18:00:00&transport=2&city_start=Москва&city_end=Екатеринбург",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"travel_filter"
+					],
+					"query": [
+						{
+							"key": "datetime",
+							"value": "2025-01-01T18:00:00"
+						},
+						{
+							"key": "transport",
+							"value": "2"
+						},
+						{
+							"key": "city_start",
+							"value": "Москва"
+						},
+						{
+							"key": "city_end",
+							"value": "Екатеринбург"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add_booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the correct Content-Type header\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is a boolean value\", function () {",
+							"    pm.expect(pm.response.json()).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is true\", function () {",
+							"    pm.expect(pm.response.text()).to.equal(\"true\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response includes the required fields - id_trip, id_user, id_status\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.include.all.keys('id_trip', 'id_user', 'id_status');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/add_booking?id_trip=2&id_user=2&id_status=2",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"add_booking"
+					],
+					"query": [
+						{
+							"key": "id_trip",
+							"value": "2"
+						},
+						{
+							"key": "id_user",
+							"value": "2"
+						},
+						{
+							"key": "id_status",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all_trip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Validate the idTrip, datetime, datetimeend, startPoint, and finishPoint fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+							"    ",
+							"    responseData.forEach(function(trip) {",
+							"        pm.expect(trip).to.have.property('idTrip').that.is.a('number');",
+							"        pm.expect(trip).to.have.property('datetime').that.is.a('string');",
+							"        pm.expect(trip).to.have.property('datetimeend').that.is.a('string');",
+							"        pm.expect(trip).to.have.property('startPoint').that.is.a('string');",
+							"        pm.expect(trip).to.have.property('finishPoint').that.is.a('string');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Datetime field is in a valid date-time format\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    responseData.forEach(function(trip){",
+							"        pm.expect(trip.datetime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response contains an array with at least one element\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/all_trip?datetime=2025-01-01T00:00:00&city_start=Химки&city_end=Санкт-Петербург",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"all_trip"
+					],
+					"query": [
+						{
+							"key": "datetime",
+							"value": "2025-01-01T00:00:00"
+						},
+						{
+							"key": "city_start",
+							"value": "Химки"
+						},
+						{
+							"key": "city_end",
+							"value": "Санкт-Петербург"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find_booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"IdBooking is a non-negative integer\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('array');",
+							"  responseData.forEach(function(item) {",
+							"    pm.expect(item.idBooking).to.be.a('number').and.to.satisfy((val) => val >= 0, \"IdBooking should be a non-negative integer\");",
+							"  });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Datetime is in a valid date-time format\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(item) {",
+							"        pm.expect(item.datetime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$/);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"StartPoint and FinishPoint are non-empty strings\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('array');",
+							"  responseData.forEach(function(item) {",
+							"    pm.expect(item.startPoint).to.be.a('string').and.to.have.lengthOf.at.least(1, \"StartPoint should not be empty\");",
+							"    pm.expect(item.finishPoint).to.be.a('string').and.to.have.lengthOf.at.least(1, \"FinishPoint should not be empty\");",
+							"  });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/find_booking?tg_name_user=example1",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"find_booking"
+					],
+					"query": [
+						{
+							"key": "tg_name_user",
+							"value": "example1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the correct Content-Type header\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.equal(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is a boolean value\", function () {",
+							"    pm.expect(pm.response.json()).to.be.a('boolean');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response boolean value is true\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.a('boolean');",
+							"    pm.expect(responseData).to.equal(true);",
+							"});",
+							"",
+							"",
+							"pm.test(\"IdBooking parameter is present in the request URL\", function () {",
+							"    const requestUrl = pm.request.url;",
+							"    ",
+							"    pm.expect(requestUrl).to.include(\"idBooking=30\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://10.12.208.1:8080/passenger_transportation/delete_booking?idBooking=30",
+					"protocol": "http",
+					"host": [
+						"10",
+						"12",
+						"208",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"passenger_transportation",
+						"delete_booking"
+					],
+					"query": [
+						{
+							"key": "idBooking",
+							"value": "30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
